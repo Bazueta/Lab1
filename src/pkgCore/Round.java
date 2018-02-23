@@ -6,52 +6,69 @@ public class Round {
 
 	private int ComeOutScore;
 	private eGameResult eGameResult;
-	private int RollCount;
 	private LinkedList<Roll> rolls = new LinkedList<Roll>();
 
 	public Round() {
-		ComeOutScore = new Roll().getScore();
-		RollCount = 1;
+		Roll comeOutRoll = new Roll();
+		ComeOutScore = comeOutRoll.getScore();
+		rolls.add(comeOutRoll);
 		// TODO: Execute Come Out roll, value ComeOutScore
 
 		// TODO: Create a loop that will execute a roll until point is made, or
 		// seven-out
-		if( 4 <= ComeOutScore && ComeOutScore <= 10 && ComeOutScore != 7)
+		if(ComeOutScore == 7 || ComeOutScore == 11)
 		{
-			Roll temp = new Roll();
-			RollCount++;
-			while(true)
+			this.eGameResult = eGameResult.NATURAL;
+		}
+		else if(ComeOutScore == 2 || ComeOutScore == 3 || ComeOutScore == 12)
+		{
+			this.eGameResult = eGameResult.CRAPS;
+		}
+		else
+		{
+			Roll newRoll;
+			boolean b = false;
+			while(b == false)
 			{
-				if(temp.getScore() == 7) 
+				newRoll = new Roll();
+				rolls.add(newRoll);
+				if(newRoll.getScore() == 7)
 				{
 					eGameResult = eGameResult.SEVEN_OUT;
-					break;
+					b = true;
 				}
-				if(temp.getScore() == ComeOutScore)
+				else if(newRoll.getScore() == ComeOutScore)
 				{
 					eGameResult = eGameResult.POINT;
-					break;
+					b = true;
 				}
-				temp = new Roll();
-				RollCount++;
 			}
 		}
-		else {
-			if(ComeOutScore == 7 || ComeOutScore == 11)
-				eGameResult = eGameResult.NATURAL;
-			else eGameResult = eGameResult.CRAPS;
-		}
-
-		// TODO: value the eGameResult after the round is complete
 	}
 
 	public int RollCount() {
 		// Return the roll count
-		return RollCount;
+		return rolls.size();
 	}
-	public static void main(String [] args)
+	public String printRolls()
 	{
-		Round round = new Round();
-		System.out.print(round.RollCount());
+		String strRolls = new String();
+		for(Roll r : rolls)
+		{
+			strRolls = strRolls + r.getScore() + ' ';
+		}
+		return strRolls;
+	}
+	public int getInitialScore()
+	{
+		return rolls.getFirst().getScore();
+	}
+	public int getLastScore()
+	{
+		return rolls.getLast().getScore();
+	}
+	public eGameResult geteGameResult()
+	{
+		return this.eGameResult;
 	}
 }
